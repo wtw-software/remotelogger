@@ -1,6 +1,6 @@
-LogMessage = require "./LogMessage"
-argsToArray = require "./argsToArray"
-http = require "./http"
+LogMessage    = require "./LogMessage"
+argsToArray   = require "./argsToArray"
+http          = require "./http"
 
 
 class Console
@@ -17,24 +17,28 @@ class Console
   log: ->
     logMessage = new LogMessage "log", argsToArray arguments
     @logMessages.push logMessage
+    @invokeSuperMethod logMessage
     if @remoteLogging.on
       @logMessageToRemote logMessage
 
   info: ->
     logMessage = new LogMessage "info", argsToArray arguments
     @logMessages.push logMessage
+    @invokeSuperMethod logMessage
     if @remoteLogging.on
       @logMessageToRemote logMessage
 
   warn: ->
     logMessage = new LogMessage "warn", argsToArray arguments
     @logMessages.push logMessage
+    @invokeSuperMethod logMessage
     if @remoteLogging.on
       @logMessageToRemote logMessage
 
   error: ->
     logMessage = new LogMessage "error", argsToArray arguments
     @logMessages.push logMessage
+    @invokeSuperMethod logMessage
     if @remoteLogging.on
       @logMessageToRemote logMessage
 
