@@ -6,7 +6,6 @@ var express             = require('express'),
     routes              = require('./lib/routes')
 
 
-
 var app = express();
 
 app.configure(function(){
@@ -31,7 +30,7 @@ app.configure('development', function(){
 
 
 
-app.get(  '/', routes.serveTest )
+app.get( '/', routes.serveTest )
 app.post( '/log/startsession', allowAllOrigins, routes.startLogSession )
 app.post( '/log/stopsession', allowAllOrigins, routes.stopLogSession )
 app.post( '/log', allowAllOrigins, routes.logMessage )
