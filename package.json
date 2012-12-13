@@ -1,0 +1,20 @@
+{
+  "name": "logger",
+  "version": "0.0.1",
+  "description": "Neato js logging",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "bin/test",
+    "start": "node server.js"
+  },
+  "author": "Jorn Andre Tangen",
+  "license": "MIT",
+  "dependencies": {
+    "connect": "~2.7.1",
+    "express": "~3.0.4",
+    "browserify": "~1.16.6"
+  }
+}
