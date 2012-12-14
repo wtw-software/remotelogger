@@ -12,7 +12,7 @@ class Console
       sid: null
     on: false
     url: "http://localhost:3000"
-  parentConsole: window.console
+  nativeConsole: window.console
 
   log: ->
     logMessage = new LogMessage "log", argsToArray arguments
@@ -45,29 +45,14 @@ class Console
   invokeSuperMethod: (logMessage) ->
     logType = logMessage.type
     messages = logMessage.messages
-    if parentConsole and parentConsole[logType]
-      parentConsole[logType].apply parentConsole, messages
+    if @nativeConsole and @nativeConsole[logType]
+      @nativeConsole[logType].apply @nativeConsole, messages
 
   turnOnRemoteLogging: ->
-    http.post
-      url: "#{@remoteLogging.url}/log/startsession"
-      data: @remoteLogging.session
-      error: =>
-        @parentConsole.error "could not start logging"
-      success: =>
-        @remoteLogging.on = true
-        for logMessage in @logMessages
-          @logMessageToRemote logMessage
+    @remoteLogging.on = true
 
   turnOffRemoteLogging: ->
     @remoteLogging.on = false
-    http.post
-      url: "#{@remoteLogging.url}/log/stopsession"
-      data: @remoteLogging.session
-      error: =>
-        @parentConsole.error "could not stop logging to remote"
-      success: =>
-        @parentConsole.log "stopped logging to remote"
 
   logMessageToRemote: (logMessage) ->
     http.post
@@ -76,10 +61,10 @@ class Console
         logmessage: logMessage
         logsession: @remoteLogging.session
       error: (error) =>
-        @parentConsole.log error
+        @nativeConsole.log error
       success: =>
         logMessage.remotelyLogged = true
-        @parentConsole.log "success"
+        @nativeConsole.log "success"
 
 
 

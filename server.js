@@ -14,6 +14,8 @@ app.configure(function(){
   app.use( express.logger('dev') )
   app.use( express.bodyParser() )
   app.use( express.methodOverride() )
+  app.use( express.cookieParser('keyboard cat') )
+  app.use( express.session({ secret: 'keyboard cat' }) )
   app.use( app.router )
   app.use( express.static(path.join(__dirname, 'public')) )
   app.use( browserify({ 
@@ -28,11 +30,11 @@ app.configure('development', function(){
   app.use(express.errorHandler())
 })
 
-
+app.get('/ip', function(req, res) {
+  res.send(req.connection.remoteAddress)
+})
 
 app.get( '/', routes.serveTest )
-app.post( '/log/startsession', allowAllOrigins, routes.startLogSession )
-app.post( '/log/stopsession', allowAllOrigins, routes.stopLogSession )
 app.post( '/log', allowAllOrigins, routes.logMessage )
 
 
