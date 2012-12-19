@@ -19,28 +19,28 @@ class Console
     @logMessages.push logMessage
     @invokeSuperMethod logMessage
     if @remoteLogging.on
-      @logMessageToRemote logMessage
+      @postLogMessage logMessage
 
   info: ->
     logMessage = new LogMessage "info", argsToArray arguments
     @logMessages.push logMessage
     @invokeSuperMethod logMessage
     if @remoteLogging.on
-      @logMessageToRemote logMessage
+      @postLogMessage logMessage
 
   warn: ->
     logMessage = new LogMessage "warn", argsToArray arguments
     @logMessages.push logMessage
     @invokeSuperMethod logMessage
     if @remoteLogging.on
-      @logMessageToRemote logMessage
+      @postLogMessage logMessage
 
   error: ->
     logMessage = new LogMessage "error", argsToArray arguments
     @logMessages.push logMessage
     @invokeSuperMethod logMessage
     if @remoteLogging.on
-      @logMessageToRemote logMessage
+      @postLogMessage logMessage
 
   invokeSuperMethod: (logMessage) ->
     logType = logMessage.type
@@ -54,7 +54,17 @@ class Console
   turnOffRemoteLogging: ->
     @remoteLogging.on = false
 
-  logMessageToRemote: (logMessage) ->
+  resetLogSession: ->
+    http.put
+      url: "#{@remoteLogging.url}/log/reset"
+      data: 
+        logSession: @remoteLogging.session
+      error: (error) =>
+        @nativeConsole.log error
+      success: =>
+        @nativeConsole.log "remote log session reset"
+
+  postLogMessage: (logMessage) ->
     http.post
       url: "#{@remoteLogging.url}/log"
       data: 
@@ -64,7 +74,6 @@ class Console
         @nativeConsole.log error
       success: =>
         logMessage.remotelyLogged = true
-        @nativeConsole.log "success"
 
 
 
