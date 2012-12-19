@@ -7,6 +7,7 @@ var express             = require( 'express' ),
     allowAllOrigins     = require( './lib/middleware/allowAllOrigins' ),
     logSessionParser    = require( './lib/middleware/logSessionParser' )
     errorGenerator      = require( './lib/middleware/errorGenerator' )
+    
 
 
 var app, reddisStore
@@ -47,9 +48,12 @@ app.configure('development', function() {
 /*
  * Routes
 */
-app.get( '/', routes.index )
+
+app.get(  '/', routes.index )
+
 app.all( '/log', logSessionParser )
 app.post( '/log', allowAllOrigins, logSessionParser, routes.postLogMessage )
+app.put( '/log/reset', allowAllOrigins, logSessionParser, routes.resetLogSession )
 
 
 
