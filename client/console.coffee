@@ -7,8 +7,8 @@ class Console
   logMessages: []
   remoteLogging:
     session:
-      appname: null
-      username: null
+      appName: "remote-logger"
+      userName: "dev"
       sid: null
     on: false
     url: "http://localhost:3000"
@@ -58,14 +58,13 @@ class Console
     http.post
       url: "#{@remoteLogging.url}/log"
       data: 
-        logmessage: logMessage
-        logsession: @remoteLogging.session
+        logMessage: logMessage
+        logSession: @remoteLogging.session
       error: (error) =>
         @nativeConsole.log error
       success: =>
         logMessage.remotelyLogged = true
         @nativeConsole.log "success"
-
 
 
 
