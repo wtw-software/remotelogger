@@ -1,26 +1,33 @@
-var express             = require('express'),
-    http                = require('http'),
-    path                = require('path'),
-    browserify          = require('browserify'),
-    allowAllOrigins     = require('./lib/allowAllOrigins'),
-    routes              = require('./lib/routes')
+var express             = require( 'express' ),
+    http                = require( 'http' ),
+    RedisStore          = require( 'connect-redis' )( express )
+    path                = require( 'path' ),
+    browserify          = require( 'browserify' ),
+    routes              = require( './lib/routes' ),
+    allowAllOrigins     = require( './lib/middleware/allowAllOrigins' ),
+    logSessionParser    = require( './lib/middleware/logSessionParser' )
+    errorGenerator      = require( './lib/middleware/errorGenerator' )
 
 
+var app, reddisStore
 
-var app = express();
+app = express()
+redisStore = new RedisStore()
+
 
 
 /*
  * Config
 */
-app.configure(function(){
+app.configure(function() {
   app.set( 'port', process.env.PORT || 3000 )
   app.use( express.favicon() )
   app.use( express.logger('dev') )
   app.use( express.bodyParser() )
   app.use( express.methodOverride() )
   app.use( express.cookieParser('remotelogger secret shit boii') )
-  app.use( express.session({ secret: 'remotelogger secret shit boii' }) )
+  app.use( express.session({ secret: 'remotelogger secret shit boii', store: redisStore }) )
+  app.use( errorGenerator )
   app.use( app.router )
   app.use( express.static(path.join(__dirname, 'public')) )
   app.use( browserify({ 
@@ -31,7 +38,7 @@ app.configure(function(){
   }))
 })
 
-app.configure('development', function(){
+app.configure('development', function() {
   app.use(express.errorHandler())
 })
 
@@ -41,13 +48,14 @@ app.configure('development', function(){
  * Routes
 */
 app.get( '/', routes.index )
-app.post( '/log', allowAllOrigins, routes.logMessage )
+app.all( '/log', logSessionParser )
+app.post( '/log', allowAllOrigins, logSessionParser, routes.postLogMessage )
 
 
 
 /*
  * Start server
 */
-http.createServer(app).listen(app.get('port'), function(){
+http.createServer(app).listen(app.get('port'), function() {
   console.log( "Express server listening on port " + app.get('port') )
 })
