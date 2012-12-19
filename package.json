@@ -15,6 +15,7 @@
   "dependencies": {
     "connect": "~2.7.1",
     "express": "~3.0.4",
-    "browserify": "~1.16.6"
+    "browserify": "~1.16.6",
+    "connect-redis": "~1.4.5"
   }
 }
