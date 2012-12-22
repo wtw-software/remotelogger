@@ -4,10 +4,21 @@
   <script type="text/javascript" src="http://localhost:3000/remotelogger.js"></script>
   <script>
 
-    console.turnOnRemoteLogging()
-    console.resetLogSession()
+    console.startRemoteLogSession()
+    //console.continueRemoteLogSession()
 
     console.log("message 1", "message 2")
+
+    console.log("obj", {
+      foo: 'bar',
+      numbers: [1,2,3],
+      singelNumber: 1337,
+      bool: true
+    })
+
+    console.log(function foo() {
+      return "bar"
+    })
 
   </script>
 </head>
