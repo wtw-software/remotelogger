@@ -16,6 +16,8 @@
     "connect": "~2.7.1",
     "express": "~3.0.4",
     "browserify": "~1.16.6",
-    "connect-redis": "~1.4.5"
+    "connect-redis": "~1.4.5",
+    "express-namespace": "~0.1.1",
+    "async": "~0.1.22"
   }
 }
