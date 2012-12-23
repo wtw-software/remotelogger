@@ -55,6 +55,8 @@ app.configure('development', function() {
 
 app.get( '/', routes.index )
 
+app.get('/readstream/:id', allowAllOrigins, logSessionParser, routes.readStream )
+
 app.post( '/logmessage', allowAllOrigins, logSessionParser, routes.postLogMessage )
 
 
