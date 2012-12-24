@@ -11,8 +11,11 @@ class Console
       userName: "dev"
       sid: null
     on: false
-    url: "http://localhost:3000"
+    url: "http://jsloggerclient.wtw.no:3000"
   nativeConsole: window.console
+
+  constructor: ->
+    do @emitLoad
 
   log: ->
     logMessage = new LogMessage "log", argsToArray arguments
@@ -66,6 +69,14 @@ class Console
     for logMessage in @logMessages
       if not logMessage.remotelyLogged
         @postLogMessage logMessage
+
+  emitLoad: () ->
+    http.post
+      url: "#{@remoteLogging.url}/consoleload"
+      data:
+        logSession: @remoteLogging.session
+      error: (error) =>
+      success: =>
 
   postLogMessage: (logMessage, cb) ->
     http.post
