@@ -1,5 +1,5 @@
 var fs          = require( 'fs' ),
-    LogMessage  = require( '../../lib/classes/LogMessage' ),
+    LogMessage  = require( '../../lib/classes/LogMessage' )
 
 
 
