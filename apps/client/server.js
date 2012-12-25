@@ -5,11 +5,11 @@ var express               = require( 'express' ),
     repl                  = require( 'repl' ),
     path                  = require( 'path' ),
     browserify            = require( 'browserify' ),
-    routes                = require( './lib/routes' ),
-    redisStoreSingelton   = require( './lib/redisStoreSingelton' ),
-    allowAllOrigins       = require( './lib/middleware/allowAllOrigins' ),
-    logSessionParser      = require( './lib/middleware/logSessionParser' )
-    errorGenerator        = require( './lib/middleware/errorGenerator' )
+    routes                = require( './routes' ),
+    redisStoreSingelton   = require( '../../lib/redisStoreSingelton' ),
+    allowAllOrigins       = require( '../../lib/middleware/allowAllOrigins' ),
+    logSessionParser      = require( '../../lib/middleware/logSessionParser' )
+    errorGenerator        = require( '../../lib/middleware/errorGenerator' )
     
 
 
@@ -36,7 +36,7 @@ app.configure(function() {
   app.use( app.router )
   app.use( express.static(path.join(__dirname, 'public')) )
   app.use( browserify({ 
-    entry: __dirname + '/client/coffee/main.coffee',
+    entry: __dirname + '/coffee/main.coffee',
     mount: "/remotelogger.js",
     watch: true,
     debug: true
@@ -62,10 +62,4 @@ app.post( '/logmessage', allowAllOrigins, logSessionParser, routes.postLogMessag
 app.post( '/consoleload', allowAllOrigins, logSessionParser, routes.consoleLoad )
 
 
-/*
- * Start server
-*/
-
-http.createServer(app).listen(app.get('port'), function() {
-  console.log( "Express server listening on port " + app.get('port') )
-})
+module.exports = app
