@@ -47,5 +47,7 @@ app.configure('development', function() {
 
 app.get( '/', routes.index )
 
+app.get('/readstream/:id', allowAllOrigins, routes.readStream )
+
 
 module.exports = app

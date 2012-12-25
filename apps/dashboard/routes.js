@@ -10,9 +10,9 @@ module.exports.index = function( req, res ) {
 
 module.exports.readStream = function( req, res ) {
 
-  res.set('Content-Type', 'text/event-stream')
-  res.set('Cache-Control', 'no-cache')
-  res.set('Connection', 'keep-alive')
+  res.set('Content-Type',   'text/event-stream')
+  res.set('Cache-Control',  'no-cache')
+  res.set('Connection',     'keep-alive')
 
   LogSession.getById(req.params.id, function( err, logSession ) {
     var logEventStream, sseStream
@@ -20,7 +20,7 @@ module.exports.readStream = function( req, res ) {
     logEventStream = logSession.createLogEventStream()
     sseStream = new SSEStream()
 
-    res.on("close", function() {
+    res.on('close', function() {
       logEventStream.end()
     })
 
