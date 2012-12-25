@@ -7,22 +7,20 @@ var servers = {
   dashboard:  require( './apps/dashboard/server')
 }
 
+function createServerProcess( serverName ) {
+  var worker
+  worker = cluster.fork({ server: serverName })
+  worker.on('exit', function() {
+    console.log( 'server ' + serverName + ' exiting. regenning it..\n' )
+    createServerProcess( serverName )
+  })
+  return worker
+}
 
 if( cluster.isMaster ) {
-  var clientProcess, dashboardProcess
-
-  clientProcess = cluster.fork({ server: 'client' })
-  dashboardProcess = cluster.fork({ server: 'dashboard' })
-
-  clientProcess.on('exit', function() {
-    console.log( 'clientProcess exited. restarting...' )
-    clientProcess = cluster.fork({ server: 'client' })
-  })
-
-  dashboardProcess.on('exit', function() {
-    console.log( 'dashboardProcess exited. restarting...' )
-    dashboardProcess = cluster.fork({ server: 'client' })
-  })
+  
+  createServerProcess( 'client' )
+  createServerProcess( 'dashboard' )
 
   process.on('SIGTERM',function(){
     clientProcess.kill( 'SIGTERM' )
