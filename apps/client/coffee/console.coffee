@@ -7,15 +7,12 @@ class Console
   logMessages: []
   remoteLogging:
     session:
-      appName: "remote-logger"
-      userName: "dev"
-      sid: null
+      appName: null
+      userName: null
+      sessionId: null
     on: false
     url: "http://jsloggerclient.wtw.no:3000"
   nativeConsole: window.console
-
-  constructor: ->
-    do @emitLoad
 
   log: ->
     logMessage = new LogMessage "log", argsToArray arguments

@@ -47,7 +47,10 @@ app.configure('development', function() {
 
 app.get( '/', routes.index )
 
-app.get('/readstream/:id', allowAllOrigins, routes.readStream )
+app.get('/readstream/:id', routes.readStream )
 
 
-module.exports = app
+// start server
+http.createServer(app).listen(app.get('port'), function() {
+  console.log( "client server server listening on port " + app.get('port') )
+})

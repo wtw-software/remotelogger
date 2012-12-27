@@ -17,6 +17,9 @@ module.exports.readStream = function( req, res ) {
   LogSession.getById(req.params.id, function( err, logSession ) {
     var logEventStream, sseStream
 
+    if( err ) 
+      return res.generateError( 500, new Error("could not find logSession") )
+
     logEventStream = logSession.createLogEventStream()
     sseStream = new SSEStream()
 
@@ -27,10 +30,6 @@ module.exports.readStream = function( req, res ) {
     logEventStream
       .pipe( sseStream )
       .pipe( res )
-
-    logEventStream.on('ready', function() {
-      logSession.emitEventCache()
-    })
       
   })
 }

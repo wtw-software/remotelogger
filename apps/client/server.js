@@ -1,6 +1,6 @@
-var express               = require( 'express' ),
+var http                  = require( 'http' ),
+    express               = require( 'express' ),
     namespaces            = require( 'express-namespace' ),
-    http                  = require( 'http' ),
     net                   = require( 'net' ),
     repl                  = require( 'repl' ),
     path                  = require( 'path' ),
@@ -8,7 +8,7 @@ var express               = require( 'express' ),
     routes                = require( './routes' ),
     redisStoreSingelton   = require( '../../lib/redisStoreSingelton' ),
     allowAllOrigins       = require( '../../lib/middleware/allowAllOrigins' ),
-    logSessionParser      = require( '../../lib/middleware/logSessionParser' )
+    logSessionParser      = require( '../../lib/middleware/logSessionParser' ),
     errorGenerator        = require( '../../lib/middleware/errorGenerator' )
     
 
@@ -30,8 +30,6 @@ app.configure(function() {
   app.use( express.logger('dev') )
   app.use( express.bodyParser() )
   app.use( express.methodOverride() )
-  app.use( express.cookieParser('remotelogger client secret shit boii') )
-  app.use( express.session({ secret: 'remotelogger client secret shit boii', store: redisStore }) )
   app.use( errorGenerator )
   app.use( app.router )
   app.use( express.static(path.join(__dirname, 'public')) )
@@ -60,4 +58,6 @@ app.post( '/logmessage', allowAllOrigins, logSessionParser, routes.postLogMessag
 app.post( '/consoleload', allowAllOrigins, logSessionParser, routes.consoleLoad )
 
 
-module.exports = app
+http.createServer(app).listen(app.get('port'), function() {
+  console.log( "client server server listening on port " + app.get('port') )
+})

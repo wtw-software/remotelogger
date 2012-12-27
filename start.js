@@ -1,39 +1,35 @@
-var http     = require( 'http' ),
-    cluster  = require( 'cluster' )
+var childProcess = require( 'child_process' )
     
 
-var servers = {
-  client:     require( './apps/client/server' ),      
-  dashboard:  require( './apps/dashboard/server')
+// memory store for storing serverprocess by their pid
+var serverProcesses = {}
+
+
+// start a server process by forking current process
+function createServerProcess( serverPath ) {
+  var serverProcess
+  serverProcess = childProcess.fork( serverPath )
+  serverProcesses[ serverProcess.pid ] = serverProcess
+  serverProcess.on('exit', function() {
+    console.log( 'server [' + serverPath + '] exiting. restarting it..\n' )
+    delete serverProcesses[ serverProcess.pid ]
+    createServerProcess( serverPath )
+  })
+  return serverProcess
 }
 
-function createServerProcess( serverName ) {
-  var worker
-  worker = cluster.fork({ server: serverName })
-  worker.on('exit', function() {
-    console.log( 'server ' + serverName + ' exiting. regenning it..\n' )
-    createServerProcess( serverName )
-  })
-  return worker
-}
 
-if( cluster.isMaster ) {
-  
-  createServerProcess( 'client' )
-  createServerProcess( 'dashboard' )
+// exit all child processes properly when exiting this one
+process.on('SIGTERM',function(){
+  var pid, serverProcess
+  for( pid in serverProcesses ) {
+    serverProcess = serverProcesses[ pid ]
+    serverProcess.kill( 'SIGTERM' ) 
+  }
+  process.exit(1)
+})
 
-  process.on('SIGTERM',function(){
-    clientProcess.kill( 'SIGTERM' )
-    dashboardProcess.kill( 'SIGTERM' )
-    process.exit(1)
-  })
 
-} else {
-
-  var server = servers[ process.env.server ]
-
-  http.createServer(server).listen(3000, function() {
-    console.log( "Express server listening on port " + 3000 )
-  })
-
-}
+// start the servers
+createServerProcess( __dirname + '/apps/client/server' )
+createServerProcess( __dirname + '/apps/dashboard/server' )
