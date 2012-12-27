@@ -61,7 +61,7 @@ app.namespace('/logsession', function() {
 
   app.get( '/', routes.getAllLogSessions )
 
-  app.get( '/syncstream.:format?', addEventStreamHeaders, routes.getSyncStream )
+  app.get( '/syncstream.:format?', addEventStreamHeaders, routes.getLogSessionSyncStream )
   
   app.get( '/:id', findLogSessionById, routes.getLogSession )
 

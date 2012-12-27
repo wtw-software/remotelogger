@@ -33,6 +33,6 @@ module.exports.postLogMessage = function( req, res ) {
 
 
 module.exports.consoleLoad = function( req, res ) {
-  req.logSession.publishEvent( 'consoleload', 1 )
+  req.logSession.emitConsoleLoad()
   res.send()
 }

@@ -1,3 +1,4 @@
+
 var LogSessionCollection  = require( '../collections/LogSession' ),
     LogSessionsItemView   = require( './LogSessionItem' )
 

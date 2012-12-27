@@ -58,32 +58,29 @@ module.exports.getStream = function( req, res, next ) {
 }
 
 
-module.exports.getSyncStream = function( req, res, next ) {
-  var syncStream, logEventStream
+module.exports.getLogSessionSyncStream = function( req, res, next ) {
+  var syncStream, streamFormatter
 
-  syncStream = new SSEStream()
+  syncStream = LogSession.getSyncStream()
+  streamFormatter = new SSEStream()
 
   syncStream
+    .pipe( streamFormatter )
     .pipe( res )
 
   res.on('close', function() {
     syncStream.end()
   })
 
-  LogSession.getAll(function( error, logSessions ) {
-    if( error )
-      return res.generateError( 500, error )
+  syncStream.on('ready', function() {
+    LogSession.getAll(function( error, logSessions ) {
+      if( error )
+        return res.generateError( 500, error )
 
-    logSessions.forEach(function( logSession ) {
-      
-      logEventStream = logSession.createLogEventStream()
-
-      logEventStream.on('ready', function() {
+      logSessions.forEach(function( logSession ) {
         logSession.emitAddLogSession()
       })
-
-      logEventStream.pipe( syncStream )
-
     })
   })
+  
 }
