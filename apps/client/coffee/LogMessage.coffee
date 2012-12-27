@@ -9,7 +9,17 @@ class LogMessage
   constructor: (type, messages) ->
     @timeStamp = Date().toString()
     @type = type or "message"
-    @messages = messages or []
+    @messages = @parseMessages messages
+
+  parseMessages: (messages) ->
+    out = []
+    for message in messages
+      type = typeof message
+      value = message
+      out.push
+        type: type
+        value: value
+    out
 
 
 

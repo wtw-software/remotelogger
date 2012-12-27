@@ -44,7 +44,9 @@ class Console
 
   invokeSuperMethod: (logMessage) ->
     logType = logMessage.type
-    messages = logMessage.messages
+    messages = []
+    for message in logMessage.messages
+      messages.push message.value
     if @nativeConsole and @nativeConsole[logType]
       @nativeConsole[logType].apply @nativeConsole, messages
 
@@ -69,7 +71,7 @@ class Console
 
   emitLoad: () ->
     http.post
-      url: "#{@remoteLogging.url}/consoleload"
+      url: "#{@remoteLogging.url}/log/consoleload"
       data:
         logSession: @remoteLogging.session
       error: (error) =>
@@ -77,7 +79,7 @@ class Console
 
   postLogMessage: (logMessage, cb) ->
     http.post
-      url: "#{@remoteLogging.url}/logmessage"
+      url: "#{@remoteLogging.url}/log/message"
       data: 
         logMessage: logMessage
         logSession: @remoteLogging.session

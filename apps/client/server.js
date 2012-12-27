@@ -42,7 +42,7 @@ app.configure(function() {
 })
 
 app.configure('development', function() {
-  app.use(express.errorHandler())
+  app.use( express.errorHandler() )
 })
 
 
@@ -51,11 +51,15 @@ app.configure('development', function() {
  * Routes
 */
 
-app.get( '/', routes.index )
+app.namespace('/log', function() {
+  
+  app.all( '*', allowAllOrigins, logSessionParser({ maxAge: 60 * 60 }) )
 
-app.post( '/logmessage', allowAllOrigins, logSessionParser, routes.postLogMessage )
+  app.post( '/message', routes.postLogMessage )
 
-app.post( '/consoleload', allowAllOrigins, logSessionParser, routes.consoleLoad )
+  app.post( '/consoleload', routes.consoleLoad )
+
+})
 
 
 http.createServer(app).listen(app.get('port'), function() {

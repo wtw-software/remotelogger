@@ -7,6 +7,7 @@ var express               = require( 'express' ),
     browserify            = require( 'browserify' ),
     routes                = require( './routes' ),
     redisStoreSingelton   = require( '../../lib/redisStoreSingelton' ),
+    findLogSessionById    = require( '../../lib/middleware/findLogSessionById' ),
     errorGenerator        = require( '../../lib/middleware/errorGenerator' )
     
 
@@ -47,7 +48,15 @@ app.configure('development', function() {
 
 app.get( '/', routes.index )
 
-app.get('/readstream/:id', routes.readStream )
+app.namespace('/logsession', function() {
+
+  app.get( '/', routes.getAllLogSessions )
+
+  app.get( '/:id', findLogSessionById, routes.getLogSession )
+
+  app.get( '/:id/stream.:format?', findLogSessionById, routes.getStream )
+
+})
 
 
 // start server
