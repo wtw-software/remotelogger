@@ -1,3 +1,6 @@
+var LogSession   = require( '../models/LogSession' ),
+    LogMessage   = require( '../models/LogMessage' )
+
 
 var LogSessionCollection = Backbone.Collection.extend({
 
@@ -10,19 +13,56 @@ var LogSessionCollection = Backbone.Collection.extend({
   },
 
   addLogSessionHandler: function( event ) {
-    console.log( "addLogSessionHandler" )
+    var eventData, logSession
+
+    try {
+      eventData = JSON.parse( event.data )
+    } catch( error ) {
+      console.log( error )
+    }
+
+    logSession = new LogSession( eventData.data, eventData.logSessionId )
+
+    if( logSession instanceof Error ) {
+      return console.log( error )
+    }
+
+    this.add( logSession )
+
   },
 
   pushLogMessageHandler: function( event ) {
-    console.log( "pushLogMessageHandler" )
+    var eventData, logSession, logMessage
+
+    try {
+      eventData = JSON.parse( event.data )
+    } catch( error ) {
+      console.log( error )
+    }
+
+    logSession = this.get( eventData.logSessionId )
+
+    logMessage = new LogMessage( eventData.data )
+    logSession.addLogMessage( logMessage )
+
   },
 
   removeLogSessionHandler: function( event ) {
-    console.log( "removeLogSessionHandler" )
+    var data
+    try {
+      data = JSON.parse( event.data )
+    } catch( error ) {
+      console.log( error )
+    }
   },
 
   consoleLoadHandler: function( event ) {
-    console.log( "consoleLoadHandler" )
+    var data
+    try {
+      data = JSON.parse( event.data )
+    } catch( error ) {
+      console.log( error )
+    }
   }
 
 })
