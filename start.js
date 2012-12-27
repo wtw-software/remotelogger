@@ -8,13 +8,16 @@ var serverProcesses = {}
 // start a server process by forking current process
 function createServerProcess( serverPath ) {
   var serverProcess
+
   serverProcess = childProcess.fork( serverPath )
   serverProcesses[ serverProcess.pid ] = serverProcess
+
   serverProcess.on('exit', function() {
     console.log( 'server [' + serverPath + '] exiting. restarting it..\n' )
     delete serverProcesses[ serverProcess.pid ]
     createServerProcess( serverPath )
   })
+
   return serverProcess
 }
 
@@ -22,10 +25,12 @@ function createServerProcess( serverPath ) {
 // exit all child processes properly when exiting this one
 process.on('SIGTERM',function(){
   var pid, serverProcess
+
   for( pid in serverProcesses ) {
     serverProcess = serverProcesses[ pid ]
     serverProcess.kill( 'SIGTERM' ) 
   }
+  
   process.exit(1)
 })
 
