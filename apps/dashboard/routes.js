@@ -6,7 +6,7 @@ var LogSession  = require( '../../lib/classes/LogSession' ),
 
 
 module.exports.index = function( req, res ) {
-  res.send("index")
+  res.render( 'index' )
 }
 
 
@@ -28,10 +28,6 @@ module.exports.getLogSession = function( req, res, next ) {
 
 module.exports.getStream = function( req, res, next ) {
   var logSession, logEventStream, streamFormatter
-
-  res.set('Content-Type',   'text/event-stream')
-  res.set('Cache-Control',  'no-cache')
-  res.set('Connection',     'keep-alive')
 
   logSession = req.logSession
 
@@ -59,4 +55,35 @@ module.exports.getStream = function( req, res, next ) {
 
   }
       
+}
+
+
+module.exports.getSyncStream = function( req, res, next ) {
+  var syncStream, logEventStream
+
+  syncStream = new SSEStream()
+
+  syncStream
+    .pipe( res )
+
+  res.on('close', function() {
+    syncStream.end()
+  })
+
+  LogSession.getAll(function( error, logSessions ) {
+    if( error )
+      return res.generateError( 500, error )
+
+    logSessions.forEach(function( logSession ) {
+      
+      logEventStream = logSession.createLogEventStream()
+
+      logEventStream.on('ready', function() {
+        logSession.emitAddLogSession()
+      })
+
+      logEventStream.pipe( syncStream )
+
+    })
+  })
 }

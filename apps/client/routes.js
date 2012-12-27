@@ -23,7 +23,7 @@ module.exports.postLogMessage = function( req, res ) {
 
   try {
 
-    req.logSession.pushLogMessage( logMessage )
+    req.logSession.emitPushLogMessage( logMessage )
     res.end()
 
   } catch( error ) {
