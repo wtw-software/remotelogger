@@ -9,8 +9,8 @@ var LogSessionListView = Backbone.View.extend({
 
     this.logSessionItemViews = {}
 
-    app.logSessionCollection.on( 'add', this.onAddLogSessionHandler.bind(this) )
-    app.logSessionCollection.on( 'remove', this.onRemoveLogSessionHandler.bind(this) )
+    this.listenTo( app.logSessionCollection, 'add', this.onAddLogSessionHandler.bind(this) )
+    this.listenTo( app.logSessionCollection, 'remove', this.onRemoveLogSessionHandler.bind(this) )
   },
 
   onAddLogSessionHandler: function( logSession ) {

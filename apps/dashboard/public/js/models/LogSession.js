@@ -10,6 +10,10 @@ var LogSessionModel = Backbone.Model.extend({
 
   addLogMessage: function( logMessage ) {
     this.get( 'logMessages' ).add( logMessage )
+  },
+
+  select: function() {
+    this.trigger( "logSession:selected", this )
   }
 
 })
