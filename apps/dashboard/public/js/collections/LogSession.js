@@ -5,11 +5,14 @@ var LogSession   = require( '../models/LogSession' ),
 var LogSessionCollection = Backbone.Collection.extend({
 
   startSync: function() {
+
     this.eventSource = new EventSource( '/logsession/syncstream.sse' )
+
     this.eventSource.addEventListener( 'addLogSession', this.addLogSessionHandler.bind(this) )
     this.eventSource.addEventListener( 'pushLogMessage', this.pushLogMessageHandler.bind(this) )
     this.eventSource.addEventListener( 'removeLogSession', this.removeLogSessionHandler.bind(this) )
     this.eventSource.addEventListener( 'consoleLoad', this.consoleLoadHandler.bind(this) )
+    
   },
 
   addLogSessionHandler: function( event ) {
@@ -43,6 +46,11 @@ var LogSessionCollection = Backbone.Collection.extend({
     logSession = this.get( eventData.logSessionId )
 
     logMessage = new LogMessage( eventData.data )
+
+    if( logMessage instanceof Error ) {
+      return console.log( error )
+    }
+
     logSession.addLogMessage( logMessage )
 
   },
