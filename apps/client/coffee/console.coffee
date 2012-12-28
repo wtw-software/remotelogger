@@ -15,40 +15,40 @@ class Console
   nativeConsole: window.console
 
   log: ->
-    logMessage = new LogMessage "log", argsToArray arguments
+    args = argsToArray arguments
+    logMessage = new LogMessage "log", args
     @logMessages.push logMessage
-    @invokeSuperMethod logMessage
+    @invokeSuperMethod "log", args
     if @remoteLogging.on
       @postLogMessage logMessage
 
   info: ->
-    logMessage = new LogMessage "info", argsToArray arguments
+    args = argsToArray arguments
+    logMessage = new LogMessage "info", args
     @logMessages.push logMessage
-    @invokeSuperMethod logMessage
+    @invokeSuperMethod "info", args
     if @remoteLogging.on
       @postLogMessage logMessage
 
   warn: ->
-    logMessage = new LogMessage "warn", argsToArray arguments
+    args = argsToArray arguments
+    logMessage = new LogMessage "warn", args
     @logMessages.push logMessage
-    @invokeSuperMethod logMessage
+    @invokeSuperMethod "warn", args
     if @remoteLogging.on
       @postLogMessage logMessage
 
   error: ->
-    logMessage = new LogMessage "error", argsToArray arguments
+    args = argsToArray arguments
+    logMessage = new LogMessage "error", args
     @logMessages.push logMessage
-    @invokeSuperMethod logMessage
+    @invokeSuperMethod "error", args
     if @remoteLogging.on
       @postLogMessage logMessage
 
-  invokeSuperMethod: (logMessage) ->
-    logType = logMessage.type
-    messages = []
-    for message in logMessage.messages
-      messages.push message.value
-    if @nativeConsole and @nativeConsole[logType]
-      @nativeConsole[logType].apply @nativeConsole, messages
+  invokeSuperMethod: (type, logMessages) ->
+    if @nativeConsole and @nativeConsole[type]
+      @nativeConsole[type].apply @nativeConsole, logMessages
 
   turnOnRemoteLogging: ->
     @remoteLogging.on = true

@@ -14,8 +14,13 @@ class LogMessage
   parseMessages: (messages) ->
     out = []
     for message in messages
-      type = typeof message
-      value = message
+      if typeof $ isnt "undefined" && message instanceof $
+        type = "jQuery"
+        value =
+          html: message.html()
+      else
+        type = typeof message
+        value = message
       out.push
         type: type
         value: value
