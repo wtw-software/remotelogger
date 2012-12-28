@@ -6,8 +6,33 @@ var LogSessionCollection  = require( '../collections/LogSession' ),
 var LogSessionListView = Backbone.View.extend({
 
   initialize: function() {
-    this.logSessionCollection = new LogSessionCollection()
-    this.logSessionCollection.startSync()
+
+    this.logSessionItemViews = {}
+
+    app.logSessionCollection.on( 'add', this.onAddLogSessionHandler.bind(this) )
+    app.logSessionCollection.on( 'remove', this.onRemoveLogSessionHandler.bind(this) )
+  },
+
+  onAddLogSessionHandler: function( logSession ) {
+    var logSessionItemView
+
+    logSessionItemView = new LogSessionsItemView({ model: logSession })
+    this.logSessionItemViews[ logSession.id ] = logSessionItemView
+
+    logSessionItemView.render()
+
+    this.$el.append( logSessionItemView.$el )
+  },
+
+  onRemoveLogSessionHandler: function( logSession ) {
+    var logSessionItemView
+
+    logSessionItemView = this.logSessionItemViews[ logSession.id ]
+
+    if( logSessionItemView ) {
+      logSessionItemView.remove()  
+      delete this.logSessionItemViews[ logSession.id ]
+    }
   }
 
 })

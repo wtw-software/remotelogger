@@ -9,14 +9,17 @@ block content
       div.button.do-search Search
 
     ul#logsessions
-      li.logSession
-        div.userName
-        div.appName
 
   section.console
     header
     div#log
       ul.messages
+
+  script(type="text/template", id="logsession-item-view-template")
+    | <div class='info'> 
+    |   <h1> <%= userName %> </h1>
+    |   <h2> <%= appName %> </h2>
+    | </div>
 
 
   

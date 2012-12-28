@@ -1,7 +1,6 @@
 var SideBarView = require( './views/SideBar' )
 
 
-//var sideBarView
 
 
 $(document).ready(function() {
