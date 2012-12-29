@@ -7,8 +7,6 @@ var LogMessageView = Backbone.View.extend({
     class: 'logmessage'
   },
 
-  template: _.template( $("#logmessage-view-template").html() ),
-
   render: function() {
     var messages, objectHTML, i
 
@@ -35,7 +33,7 @@ var LogMessageView = Backbone.View.extend({
     if( type === "object" ) {
 
       i = 0
-      
+
       html += "{ "
       for( key in object ) {
         i++
