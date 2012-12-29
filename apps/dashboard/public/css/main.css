@@ -125,3 +125,29 @@ section#console #log .logmessage {
   padding: 5px 10px;
   font-size: 12px;
 }
+
+section#console #log .logmessage .key {
+  color: #4A4A4A;
+  font-weight: 400;
+}
+
+section#console #log .logmessage .value.object {
+  color: #7A7A7A;
+}
+
+section#console #log .logmessage .value.string {
+  color: #E37962;
+}
+
+section#console #log .logmessage .value.number {
+  color: #4E91C2;
+}
+
+section#console #log .logmessage .value.boolean {
+  color: #A658AD;
+}
+
+section#console #log .logmessage .value.undefined {
+  color: #8C8C8C;
+  font-style: italic;
+}
