@@ -8,7 +8,7 @@ var LogMessageView = Backbone.View.extend({
   },
 
   render: function() {
-    var messages, objectHTML, i
+    var messages, objectHTML, fnPattern
 
     this.$el.addClass( this.model.get('type') )
 
@@ -16,7 +16,12 @@ var LogMessageView = Backbone.View.extend({
     objectHTML = ""
 
     messages.forEach(function( message, index ) {
-      objectHTML += this.createObjectHTML( message.value )
+      if( message.type === 'function' ) {
+        objectHTML += this.createFunctionHTML( message.value )
+      } else {
+        objectHTML += this.createObjectHTML( message.value )
+      }
+        
       if( index + 1 < messages.length )
         objectHTML += ", "
     }, this)
@@ -24,17 +29,22 @@ var LogMessageView = Backbone.View.extend({
     this.$el.html( objectHTML )
   },
 
+  createFunctionHTML: function( fnString, cb ) {
+    return fnString
+  },
+
   createObjectHTML: function( object ) {
     var html, type, key, val, i
 
     type = typeof object
     html = "<span class='value " + type + "'>"
-
-    if( type === "object" ) {
+      
+    if( type === "object" && !(object instanceof Array) && object !== null ) {
 
       i = 0
 
       html += "{ "
+      html += "<span class='object-contents'>"
       for( key in object ) {
         i++
         val = object[ key ]
@@ -43,14 +53,28 @@ var LogMessageView = Backbone.View.extend({
         if( i < Object.keys(object).length )
           html += ", "
       }
+      html += "</span>"
       html += " }"
 
-    } else if(type == "string" ) {
+    } else if( object instanceof Array ) {
+
+      i = 0
+
+      html += "[ "
+      for( i = 0; i < object.length; i++ ) {
+        val = object[ i ]
+        html += this.createObjectHTML( val )
+        if( i + 1 < object.length )
+          html += ", "
+      }
+      html += " ]"
+
+    } else if( type == "string" ) {
       
       html += '"' + object + '"'
 
     } else {
-      
+
       html += object
 
     }

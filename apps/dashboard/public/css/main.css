@@ -131,6 +131,10 @@ section#console #log .logmessage .key {
   font-weight: 400;
 }
 
+section#console #log .logmessage .value .object-contents {
+  
+}
+
 section#console #log .logmessage .value.object {
   color: #7A7A7A;
 }
