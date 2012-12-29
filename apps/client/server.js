@@ -34,7 +34,7 @@ app.configure(function() {
   app.use( app.router )
   app.use( express.static(path.join(__dirname, 'public')) )
   app.use( browserify({ 
-    entry: __dirname + '/coffee/main.js',
+    entry: __dirname + '/clientscript/main.js',
     mount: "/remotelogger.js",
     watch: true,
     debug: true
