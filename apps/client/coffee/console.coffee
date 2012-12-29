@@ -78,6 +78,11 @@ class Console
       success: =>
 
   postLogMessage: (logMessage, cb) ->
+    try
+      logMessage = JSON.stringify logMessage
+    catch error
+      cb error
+      return null
     http.post
       url: "#{@remoteLogging.url}/log/message"
       data: 

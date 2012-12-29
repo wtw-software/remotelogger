@@ -30,6 +30,9 @@ var ConsoleView = Backbone.View.extend({
     
     this.activeLogSession = logSession
 
+    this.$el.find( '.info h1.username' ).text( logSession.get('userName') )
+    this.$el.find( '.info h2.appname' ).text( logSession.get('appName') )
+
     logMessages = this.activeLogSession.get( 'logMessages' ).models
 
     if( logMessages.length > this.logMessageViewLimit )

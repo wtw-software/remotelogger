@@ -13,7 +13,12 @@ module.exports.index = function( req, res ) {
 module.exports.postLogMessage = function( req, res ) {
   var logMessageData, logMessage, error
 
-  logMessageData = req.body.logMessage
+  try {
+    logMessageData = JSON.parse(req.body.logMessage)  
+  } catch( error ) {
+    return res.generateError( 500, error )
+  }
+  
   logMessage = new LogMessage( logMessageData )
 
   if( logMessage instanceof Error ) {
