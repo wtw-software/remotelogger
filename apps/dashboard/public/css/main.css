@@ -136,6 +136,8 @@ section#console #log .logmessage .value .object-contents {
 }
 
 section#console #log .logmessage .value.object {
+  display: inline-block;
+  vertical-align: top;
   color: #7A7A7A;
 }
 
