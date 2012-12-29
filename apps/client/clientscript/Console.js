@@ -1,11 +1,11 @@
 var LogMessage    = require( "./LogMessage" ),
     argsToArray   = require( "./argsToArray" ),
-    http          = require( "./http" )
+    http          = require( "./http" ),
+    TraceKit      = require( "./TraceKit" )
 
 
 
 var nativeConsole = window.console
-
 
 
 function Console() {
@@ -24,6 +24,15 @@ function Console() {
 
   this.nativeConsole = nativeConsole
 
+}
+
+
+Console.prototype.remoteLog = function() {
+  var args
+  args = argsToArray( arguments ) 
+  logMessage = new LogMessage( "log", args )
+  this.logMessages.push( logMessage )
+  this.postLogMessage( logMessage )
 }
 
 
