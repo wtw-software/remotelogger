@@ -9,6 +9,9 @@ var nativeConsole = window.console
 
 
 function Console() {
+  var self
+
+  self = this
 
   this.logMessages = []
 
@@ -24,6 +27,22 @@ function Console() {
 
   this.nativeConsole = nativeConsole
 
+  TraceKit.report.subscribe(function() {
+    console.log(1)
+    self.exceptionHandler.apply( self, arguments )
+  })
+
+}
+
+
+Console.prototype.exceptionHandler = function( stackInfo ) {
+  if( this.remoteLogging.on )
+    this.remoteLog( stackInfo )
+}
+
+
+Console.prototype.logException = function( error ) {
+  TraceKit.report( error )
 }
 
 

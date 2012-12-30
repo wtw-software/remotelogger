@@ -15,6 +15,18 @@ var LogSessionCollection = Backbone.Collection.extend({
     
   },
 
+
+  stopSync: function() {
+    if( this.eventSource ) {
+
+      this.eventSource.removeEventListener()
+      this.eventSource.close()
+      delete this.eventSource
+
+    }
+  },
+
+
   addLogSessionHandler: function( event ) {
     var eventData, logSession
 
@@ -45,6 +57,9 @@ var LogSessionCollection = Backbone.Collection.extend({
 
     logSession = this.get( eventData.logSessionId )
 
+    if( !logSession )
+      return null
+
     logMessage = new LogMessage( eventData.data )
 
     if( logMessage instanceof Error ) {
@@ -56,21 +71,37 @@ var LogSessionCollection = Backbone.Collection.extend({
   },
 
   removeLogSessionHandler: function( event ) {
-    var data
+    var eventData, logSession, logMessage
+
     try {
-      data = JSON.parse( event.data )
+      eventData = JSON.parse( event.data )
     } catch( error ) {
       console.log( error )
     }
+
+    logSession = this.get( eventData.logSessionId )
+
+    if( !logSession )
+      return null
+
+    this.remove( logSession )
   },
 
   consoleLoadHandler: function( event ) {
-    var data
+    var eventData, logSession, logMessage
+
     try {
-      data = JSON.parse( event.data )
+      eventData = JSON.parse( event.data )
     } catch( error ) {
       console.log( error )
     }
+
+    logSession = this.get( eventData.logSessionId )
+
+    if( !logSession )
+      return null
+    
+    logSession.trigger( 'consoleLoad' )
   }
 
 })

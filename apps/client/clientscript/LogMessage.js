@@ -14,7 +14,7 @@ LogMessage.prototype.parseMessages = function( messages ) {
 
   for( i = 0; i < messages.length; i++ ) {
 
-    message = messages[ length ]
+    message = messages[ i ]
     type = typeof message
 
     if( type == "function" ) {

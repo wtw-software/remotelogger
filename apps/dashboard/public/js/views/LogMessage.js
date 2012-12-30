@@ -30,7 +30,7 @@ var LogMessageView = Backbone.View.extend({
   },
 
   createFunctionHTML: function( fnString, cb ) {
-    return fnString
+    return "<span class='value function'>" + fnString + "</span>"
   },
 
   createObjectHTML: function( object ) {
