@@ -70,7 +70,4 @@ app.namespace('/logsession', function() {
 })
 
 
-// start server
-http.createServer(app).listen(app.get('port'), function() {
-  console.log( "client server server listening on port " + app.get('port') )
-})
+module.exports = app

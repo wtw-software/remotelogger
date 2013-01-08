@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+
+var programm      = require( "commander" ),
+    LogSession    = require( "../lib/classes/LogSession" ),
+    CliTable      = require( "cli-table" )
+
+programm
+  .version( '0.0.1' )
+  .usage( '[options] appname:username' )
+  .option( '-l, --listsessions', 'list sessions' )
+  .option( '-s, --streamlog', 'stream the log messages' )
+  .parse( process.argv )
+
+if( programm.listsessions ) {
+  LogSession.getAll(function( err, logSessions ) {
+
+    if( err ) {
+      console.error( err )
+      process.exit( 0 )
+    }
+
+    var table = new CliTable({
+      head: [ "Nr", "App", "User" ]
+    })
+
+    table.push.apply(table, logSessions.map(function( logSession, index ) {
+      return [ index, logSession.appName, logSession.userName ]
+    }))
+
+    console.log( table.toString() )
+    process.exit( 1 )
+
+  }) 
+}
+
+if( programm.streamlog ) {
+  LogSession.findById("logSession:" + programm.args[0], function( err, logSession ) {
+
+    if( err ) {
+      console.error( err )
+      process.exit( 0 )
+    }
+
+    var stream = logSession.createLogEventStream()
+
+    stream.on('data', function( data ) {
+      var obj = JSON.parse( data.split("|::|")[1] )
+      console.log( obj.data.messages )
+    })
+
+  })
+}
+

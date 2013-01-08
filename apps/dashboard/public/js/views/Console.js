@@ -33,6 +33,8 @@ var ConsoleView = Backbone.View.extend({
     this.$el.find( '.info h1.username' ).text( logSession.get('userName') )
     this.$el.find( '.info h2.appname' ).text( logSession.get('appName') )
 
+    this.show()
+
     logMessages = this.activeLogSession.get( 'logMessages' ).models
 
     if( logMessages.length > this.logMessageViewLimit )
@@ -78,6 +80,14 @@ var ConsoleView = Backbone.View.extend({
   scrollToBottom: function() {
     var logHeight = this.$el.find( '#log' ).outerHeight()
     this.$el.scrollTop( logHeight )
+  },
+
+  show: function() {
+    this.$el.addClass( 'active' )
+  },
+
+  hide: function() {
+    this.$el.removeClass( 'active' )
   }
 
 })

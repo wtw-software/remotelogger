@@ -2,13 +2,9 @@
   "name": "logger",
   "version": "0.0.1",
   "description": "Neato js logging",
-  "main": "server.js",
-  "directories": {
-    "test": "tests"
-  },
+  "main" : "./server.js",
   "scripts": {
-    "test": "bin/test",
-    "start": "node server.js"
+    "start": "start.js"
   },
   "author": "Jorn Andre Tangen",
   "license": "MIT",
@@ -20,6 +16,8 @@
     "express-namespace": "~0.1.1",
     "async": "~0.1.22",
     "redis": "~0.8.2",
-    "jade": "~0.27.7"
+    "jade": "~0.27.7",
+    "commander": "~1.1.1",
+    "cli-table": "~0.2.0"
   }
 }
